@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  ProjectNameParameter:
+    Type: String
+    Default: 'ds-test-prj-cfn'
+    Description: Project name for tag
+Resources:
+  subnet1:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      CidrBlock: 10.1.1.0/24
+      AvailabilityZone: ap-northeast-1a
+      VpcId:
+        "Fn::ImportValue": !Sub "${ProjectNameParameter}-vpc"
+      Tags:
+        - Key: Name
+          Value: ds-common-frontend-public-1a-subnet
+  mySubnetRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref subnet1
+      RouteTableId:
+        "Fn::ImportValue": !Sub "${ProjectNameParameter}-rt"
+  subnetacl1:
+    Type: 'AWS::EC2::SubnetNetworkAclAssociation'
+    Properties:
+      SubnetId: !Ref subnet1
+      NetworkAclId:
+        "Fn::ImportValue": !Sub "${ProjectNameParameter}-nacl"
+Outputs:
+  VpcId:
+    Value: !Ref subnet1
+    Export:
+      Name: !Sub "${ProjectNameParameter}-subnet"
