@@ -1,5 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Resources:
+# Network setting
   vpc1:
     Type: 'AWS::EC2::VPC'
     Properties:
@@ -45,6 +46,7 @@ Resources:
       Tags:
         - Key: Name
           Value: ds-common-rt
+# EC2 setting 
   EC2:
     Type: 'AWS::EC2::Instance'
     Properties:
